@@ -1,0 +1,1140 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "test",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 13,
+        "x": 0,
+        "y": 0
+      },
+      "id": 7,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Title\n\nAquí explicaré cosas",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.6.0",
+      "title": "Panel Title",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "description": "To fill",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 11,
+        "x": 13,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| display anomaly_score, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Anomaly Score",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true,
+            "window": {
+              "field": "anomaly_score",
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 0.1,
+              "windowSizeMode": "percentage"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 13,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "dimensions": {},
+          "expression": "fields @timestamp\n| sort @timestamp desc\n| filter log_type = 'telemetry_data'\n| limit 1\n| display moving_avg_std, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Moving AVG Score std",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 8
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "dimensions": {},
+          "expression": "fields @timestamp\n| sort @timestamp desc\n| filter log_type = 'telemetry_data'\n| limit 1\n| display moving_avg_score, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Moving average Anomaly Score",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 8
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "dimensions": {},
+          "expression": "fields @timestamp\n| sort @timestamp desc\n| filter log_type = 'telemetry_data'\n| limit 1\n| display anomaly_score, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Anomaly Score",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "hidden",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "trailing moving mean(temperature)"
+            },
+            "properties": [
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "custom.axisSoftMax",
+                "value": 5
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "trailing moving mean(pressure)"
+            },
+            "properties": [
+              {
+                "id": "min",
+                "value": 1500
+              },
+              {
+                "id": "max",
+                "value": 2500
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "trailing moving mean(pressure)",
+                  "trailing moving mean(temperature)",
+                  "trailing moving mean(flowrate)"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| display flowrate, pressure, temperature, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "ISS External Cooling Loop A",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false,
+            "window": {
+              "field": "flowrate",
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 0.1,
+              "windowSizeMode": "percentage"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false,
+            "window": {
+              "field": "temperature",
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "window": {
+              "field": "pressure",
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "celsius"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "palette-classic-by-name"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 21
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "min",
+            "max",
+            "stdDev"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "eej9qve99wbnkd"
+          },
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| display temperature, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Temperature",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true,
+            "window": {
+              "field": "temperature",
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepBefore",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "kg/hr"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 21
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "min",
+            "max",
+            "stdDev"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "eej9qve99wbnkd"
+          },
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| display flowrate, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Flowrate",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true,
+            "window": {
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "eej9qve99wbnkd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "mmHg"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 21
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "min",
+            "max",
+            "stdDev"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "eej9qve99wbnkd"
+          },
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| display pressure, @timestamp ",
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "A",
+          "region": "eu-west-1",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": []
+        }
+      ],
+      "title": "Pressure (mmHg)",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "mode": "windowFunctions",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": true,
+            "window": {
+              "reducer": "mean",
+              "windowAlignment": "trailing",
+              "windowSize": 50,
+              "windowSizeMode": "fixed"
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "1h",
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "definition": "",
+        "description": "MovingAverageScore",
+        "label": "MovingAverageScore",
+        "name": "MovingAverageScore",
+        "options": [],
+        "query": {
+          "logGroupPrefix": "iss-telemetry-analyzer-lambda",
+          "queryType": "logGroups",
+          "refId": "CloudWatchVariableQueryEditor-VariableQuery",
+          "region": "eu-west-1"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Telemetry",
+  "uid": "bej9xgs4zjapsc",
+  "version": 9
+}
