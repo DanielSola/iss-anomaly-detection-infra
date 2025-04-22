@@ -136,3 +136,27 @@ resource "aws_iam_policy" "handle_tf_state" {
     ]
   })
 }
+
+resource "aws_iam_policy" "deploy_cloudfront" {
+  name        = "deploy_cloudfront"
+  description = "Policy to allow Grafana dashboard deploy on Cloudfront"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+				"cloudfront:CreateDistribution",
+				"cloudfront:DeleteDistribution",
+        				"cloudfront:UpdateDistribution",
+
+        "cloudfront:TagResource",
+        "cloudfront:GetDistribution",
+        "cloudfront:ListTagsForResource"
+        ],
+ 			"Resource": "arn:aws:cloudfront::730335312484:distribution/*"
+    }
+    ]
+  })
+}

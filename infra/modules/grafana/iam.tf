@@ -52,9 +52,6 @@ resource "aws_iam_policy" "grafana_cloudwatch_policy" {
   })
 }
 
-
-
-
 # Attach the Policy to the IAM Role
 resource "aws_iam_role_policy_attachment" "grafana_cloudwatch_attach" {
   role       = aws_iam_role.grafana_role.name

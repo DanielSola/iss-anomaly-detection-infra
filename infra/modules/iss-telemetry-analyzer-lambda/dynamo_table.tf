@@ -1,5 +1,3 @@
-
-
 resource "aws_dynamodb_table" "anomaly_scores" {
   name           = "AnomalyScores"
   billing_mode   = "PAY_PER_REQUEST"

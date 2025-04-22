@@ -6,8 +6,8 @@ provider "grafana" {
 resource "null_resource" "check_grafana" {
   provisioner "local-exec" {
     command = <<EOT
-      sleep 30
-      for i in {1..10}; do
+      sleep 60
+      for i in {1..20}; do
         curl --fail http://${aws_instance.grafana.public_dns}:3000/api/health && exit 0 || echo "Retrying in 10 seconds..."
         sleep 10
       done
