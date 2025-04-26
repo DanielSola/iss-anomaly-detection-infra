@@ -21,7 +21,7 @@ resource "null_resource" "check_grafana" {
 resource "grafana_data_source" "cloudwatch" {
   type = "cloudwatch" # Use 'cloudwatch' for the CloudWatch data source
   name = "CloudWatch"
-  uid = "eej9qve99wbnkd"
+  uid  = "eej9qve99wbnkd"
 
   json_data_encoded = jsonencode({
     authType      = "grafana-role" # Use IAM role attached to the EC2 instance

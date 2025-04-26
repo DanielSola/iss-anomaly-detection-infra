@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "dynamoDB:CreateTable",
+        "dynamoDB:DeleteTable",
+        "dynamoDB:TagResource",
+        "dynamoDB:DescribeTable",
+        "dynamoDB:DescribeContinuousBackups",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:UpdateTimeToLive"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:dynamodb:eu-west-1:730335312484:table/AnomalyScores"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["firehose:CreateDeliveryStream"],
+      "Resource": "arn:aws:firehose:eu-west-1:730335312484:deliverystream/iss-data-stream-delivery"
+    }
+  ]
+}

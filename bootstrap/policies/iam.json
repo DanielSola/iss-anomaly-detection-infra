@@ -1,0 +1,58 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ManagePolicies",
+      "Effect": "Allow",
+      "Action": ["iam:GetPolicy", "iam:GetPolicyVersion", "iam:ListPolicyVersions", "iam:DeletePolicy", "iam:CreatePolicy"],
+      "Resource": [
+        "arn:aws:iam::730335312484:policy/*",
+        "arn:aws:iam::730335312484:policy/KinesisWritePolicy",
+        "arn:aws:iam::730335312484:policy/InvokePredictioEndpointPolicy",
+        "arn:aws:iam::730335312484:policy/LambdaKinesisReadPolicy",
+        "arn:aws:iam::730335312484:policy/telemetry-analyzer-policy",
+        "arn:aws:iam::730335312484:policy/grafana-cloudwatch-policy",
+        "arn:aws:iam::730335312484:policy/airflow-sagemaker-policy",
+        "arn:aws:iam::730335312484:policy/airflow-s3-policy",
+        "arn:aws:iam::730335312484:policy/AnomalyScoresDynamoDBPolicy"
+      ]
+    },
+    {
+      "Sid": "ManageRoles",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:GetRole",
+        "iam:ListRolePolicies",
+        "iam:ListAttachedRolePolicies",
+        "iam:AttachRolePolicy",
+        "iam:PassRole",
+        "iam:ListEntitiesForPolicy",
+        "iam:DetachRolePolicy",
+        "iam:AddRoleToInstanceProfile",
+        "iam:ListInstanceProfilesForRole",
+        "iam:RemoveRoleFromInstanceProfile",
+        "iam:DeleteRole",
+        "iam:PutRolePolicy"
+      ],
+      "Resource": [
+        "arn:aws:iam::730335312484:role/airflow-role",
+        "arn:aws:iam::730335312484:role/firehose_delivery_role",
+        "arn:aws:iam::730335312484:role/grafana-role",
+        "arn:aws:iam::730335312484:role/go_lambda_execution_role",
+        "arn:aws:iam::730335312484:role/EC2KinesisRole",
+        "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      ]
+    },
+    {
+      "Sid": "ManageInstanceProfiles",
+      "Effect": "Allow",
+      "Action": ["iam:CreateInstanceProfile", "iam:GetInstanceProfile", "iam:DeleteInstanceProfile", "iam:AddRoleToInstanceProfile", "iam:RemoveRoleFromInstanceProfile"],
+      "Resource": [
+        "arn:aws:iam::730335312484:instance-profile/EC2InstanceProfile",
+        "arn:aws:iam::730335312484:instance-profile/grafana-instance-profile",
+        "arn:aws:iam::730335312484:instance-profile/airflow-instance-profile"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ManageLogGroups",
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogGroup", "logs:DescribeLogGroups", "logs:ListTagsForResource", "logs:DeleteLogGroup", "logs:CreateLogStream", "logs:DescribeLogStreams", "logs:DeleteLogStream"],
+      "Resource": "arn:aws:logs:eu-west-1:730335312484:log-group:*"
+    }
+  ]
+}

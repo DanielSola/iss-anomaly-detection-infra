@@ -1,0 +1,39 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EC2Permissions",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeVPCAttribute",
+        "ec2:DescribeIamInstanceProfileAssociations",
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:DescribeInstances",
+        "ec2:StartInstances",
+        "ec2:RevokeSecurityGroupEgress",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeKeyPairs",
+        "ec2:ImportKeyPair",
+        "ec2:CreateTags",
+        "ec2:RunInstances",
+        "ec2:StopInstances",
+        "ec2:DescribeInstanceCreditSpecifications",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DeleteVpc",
+        "ec2:DeleteKeyPair",
+        "ec2:DescribeInstanceAttribute",
+        "ec2:CreateVPC",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:CreateSecurityGroup",
+        "ec2:ModifyInstanceAttribute",
+        "ec2:AuthorizeSecurityGroupEgress",
+        "ec2:TerminateInstances",
+        "ec2:DescribeTags",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs",
+        "ec2:DeleteSecurityGroup"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

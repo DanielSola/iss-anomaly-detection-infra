@@ -1,0 +1,17 @@
+{
+  "Statement": [
+    {
+      "Action": [
+        "cloudfront:CreateDistribution",
+        "cloudfront:DeleteDistribution",
+        "cloudfront:UpdateDistribution",
+        "cloudfront:TagResource",
+        "cloudfront:GetDistribution",
+        "cloudfront:ListTagsForResource"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:cloudfront::730335312484:distribution/*"
+    }
+  ],
+  "Version": "2012-10-17"
+}

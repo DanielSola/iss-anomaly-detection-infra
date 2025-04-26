@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "kinesis_policy" {
   name        = "KinesisWritePolicy"
   description = "Allows writing to Kinesis"
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{

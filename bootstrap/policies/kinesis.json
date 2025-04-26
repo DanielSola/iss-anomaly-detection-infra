@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "KinesisPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:PutRecord",
+        "kinesis:DescribeStreamSummary",
+        "kinesis:IncreaseStreamRetentionPeriod",
+        "kinesis:CreateStream",
+        "kinesis:ListTagsForStream",
+        "kinesis:DeleteStream",
+        "kinesis:AddTagsToStream",
+        "kinesis:UpdateStreamMode",
+        "kinesis:UpdateShardCount"
+      ],
+      "Resource": "arn:aws:kinesis:eu-west-1:730335312484:stream/iss-data-stream"
+    }
+  ]
+}

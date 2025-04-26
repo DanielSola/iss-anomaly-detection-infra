@@ -20,7 +20,7 @@ resource "null_resource" "wait_for_grafana_dashboard" {
 
 resource "grafana_dashboard_public" "my_public_dashboard" {
   dashboard_uid = grafana_dashboard.anomaly_dashboard.uid
-  uid          = "my-custom-public-uid"
+  uid           = "my-custom-public-uid"
 
   time_selection_enabled = true
   is_enabled             = true
