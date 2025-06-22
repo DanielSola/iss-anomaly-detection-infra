@@ -19,6 +19,7 @@ default_args = {
 # AWS & SageMaker Configuration
 AWS_ACCOUNT_ID = os.environ.get('AWS_ACCOUNT_ID')
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+AWS_REGION = os.environ.get('AWS_REGION')
 SAGEMAKER_ROLE_ARN = f"arn:aws:iam::{AWS_ACCOUNT_ID}:role/service-role/AmazonSageMaker-ExecutionRole-20250317T121373"
 TRAINING_IMAGE_URI = "438346466558.dkr.ecr.eu-west-1.amazonaws.com/randomcutforest:1"
 S3_TRAINING_DATA = f"s3://{S3_BUCKET_NAME}/data/loop_A_flowrate.csv"
@@ -26,7 +27,7 @@ S3_OUTPUT_PATH = "s3://{S3_BUCKET_NAME}/data/"
 ENDPOINT_NAME = "rcf-anomaly-predictor-endpoint"
 
 # Set region
-os.environ['AWS_DEFAULT_REGION'] = 'eu-west-1'
+os.environ['AWS_DEFAULT_REGION'] = AWS_REGION
 
 def generate_job_names(**context):
     job_name = f"TRAINING-JOB-{str(uuid.uuid4())[0:5]}"
@@ -117,7 +118,7 @@ def get_model_key(**kwargs):
     return f"data/{job_name}/output/model.tar.gz"
 
 def create_or_update_endpoint(**kwargs):
-    sm_client = boto3.client("sagemaker", region_name="eu-west-1")
+    sm_client = boto3.client("sagemaker", region_name=AWS_REGION)
     endpoint_name = ENDPOINT_NAME
     
     ti = kwargs['ti']

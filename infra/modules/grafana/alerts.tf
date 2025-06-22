@@ -3,10 +3,10 @@ resource "grafana_contact_point" "email_alerts" {
   name     = "anomaly-alerts"
 
   email {
-    addresses = ["daniel.sola.fraire@gmail.com"]
+    addresses = [var.notification_receiver_email]
   }
-  depends_on = [null_resource.check_grafana]
 
+  depends_on = [null_resource.check_grafana]
 }
 
 resource "grafana_notification_policy" "default" {
@@ -44,7 +44,7 @@ resource "grafana_rule_group" "rule_group_4efc786e49e5de4f" {
       }
 
       datasource_uid = "eej9qve99wbnkd"
-      model          = "{\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(lower_anomaly_score_deviation_limit) as lower_anomaly_score_deviation_limit_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:eu-west-1:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"lower_limit\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
+      model          = "{\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(lower_anomaly_score_deviation_limit) as lower_anomaly_score_deviation_limit_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"lower_limit\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
     }
     data {
       ref_id = "upper_limit"
@@ -55,7 +55,7 @@ resource "grafana_rule_group" "rule_group_4efc786e49e5de4f" {
       }
 
       datasource_uid = "eej9qve99wbnkd"
-      model          = "{\"datasource\":{\"type\":\"cloudwatch\",\"uid\":\"eej9qve99wbnkd\"},\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(upper_anomaly_score_deviation_limit) as upper_anomaly_score_deviation_limit_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:eu-west-1:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"upper_limit\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
+      model          = "{\"datasource\":{\"type\":\"cloudwatch\",\"uid\":\"eej9qve99wbnkd\"},\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(upper_anomaly_score_deviation_limit) as upper_anomaly_score_deviation_limit_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"upper_limit\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
     }
     data {
       ref_id = "anomaly_score"
@@ -66,7 +66,7 @@ resource "grafana_rule_group" "rule_group_4efc786e49e5de4f" {
       }
 
       datasource_uid = "eej9qve99wbnkd"
-      model          = "{\"datasource\":{\"type\":\"cloudwatch\",\"uid\":\"eej9qve99wbnkd\"},\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(anomaly_score) as anomaly_score_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:eu-west-1:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"anomaly_score\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
+      model          = "{\"datasource\":{\"type\":\"cloudwatch\",\"uid\":\"eej9qve99wbnkd\"},\"dimensions\":{},\"expression\":\"fields @timestamp\\n| filter log_type = 'telemetry_data'\\n| stats avg(anomaly_score) as anomaly_score_avg by bin(15s)\",\"id\":\"\",\"intervalMs\":1000,\"label\":\"\",\"logGroups\":[{\"accountId\":\"${var.aws_account_id}\",\"arn\":\"arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*\",\"name\":\"/aws/lambda/iss-telemetry-analyzer-lambda\"}],\"matchExact\":true,\"maxDataPoints\":43200,\"metricEditorMode\":0,\"metricName\":\"\",\"metricQueryType\":0,\"namespace\":\"\",\"period\":\"\",\"queryLanguage\":\"CWLI\",\"queryMode\":\"Logs\",\"refId\":\"anomaly_score\",\"region\":\"default\",\"sqlExpression\":\"\",\"statistic\":\"Average\",\"statsGroups\":[\"bin(15s)\"]}"
     }
     data {
       ref_id = "above_upper_limit"

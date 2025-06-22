@@ -77,7 +77,7 @@ resource "aws_iam_policy" "airflow_sagemaker_policy" {
           "logs:DescribeLogStreams",
           "logs:GetLogEvents"
         ]
-        Resource = "arn:aws:logs:eu-west-1:${var.aws_account_id}:log-group:/aws/sagemaker/TrainingJobs:*"
+        Resource = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/aws/sagemaker/TrainingJobs:*"
       }
     ]
   })

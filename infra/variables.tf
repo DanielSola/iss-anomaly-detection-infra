@@ -15,7 +15,7 @@ variable "airflow_user_name" {
   type        = string
 }
 
-variable "gmail_app_password" {
+variable "notification_sender_app_password" {
   description = "The app password for Gmail"
   type        = string
   sensitive   = true
@@ -26,3 +26,27 @@ variable "aws_account_id" {
   type        = string
 }
 
+variable "aws_region" {
+  description = "The AWS region"
+  type        = string
+}
+
+variable "terraform_s3_bucket" {
+  description = "The S3 bucket for Terraform state"
+  type        = string
+}
+
+variable "terraform_lock_table" {
+  description = "The DynamoDB table for Terraform state locking"
+  type        = string
+}
+
+variable "notification_sender_email" {
+  description = "The email address for sending notifications"
+  type        = string
+}
+
+variable "notification_receiver_email" {
+  description = "The email address for receiving notifications"
+  type        = string
+}

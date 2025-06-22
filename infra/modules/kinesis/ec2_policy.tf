@@ -7,7 +7,7 @@ resource "aws_iam_policy" "kinesis_policy" {
     Statement = [{
       Effect   = "Allow"
       Action   = "kinesis:PutRecord"
-      Resource = "arn:aws:kinesis:eu-west-1:${var.aws_account_id}:stream/iss-data-stream"
+      Resource = "arn:aws:kinesis:${var.aws_region}:${var.aws_account_id}:stream/iss-data-stream"
     }]
   })
 }

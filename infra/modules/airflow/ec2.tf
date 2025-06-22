@@ -3,8 +3,8 @@ resource "aws_instance" "airflow" {
   ami                    = var.ami
   instance_type          = var.instance_type
   key_name               = "manual"
-  security_groups        = [aws_security_group.airflow_sg.name]  # Reference the security group
-  iam_instance_profile   = aws_iam_instance_profile.airflow_profile.name  # Reference the IAM instance profile
+  security_groups        = [aws_security_group.airflow_sg.name]
+  iam_instance_profile   = aws_iam_instance_profile.airflow_profile.name
   
   tags = {
     Name = "airflow"
@@ -33,6 +33,7 @@ pip install --no-cache-dir scikit-learn
 # Set AWS account ID environment variable
 export AWS_ACCOUNT_ID=${var.aws_account_id}
 export S3_BUCKEt_NAME=${var.s3_bucket_name}
+export AWS_REGION=${var.aws_region}
 
 # Initialize the Airflow database
 airflow db init
@@ -56,7 +57,6 @@ mkdir -p /home/ubuntu/airflow/dags
 aws s3 sync s3://airflow-iss-anomaly-detector/airflow/dag/ /home/ubuntu/airflow/dags/
 export AIRFLOW__CORE__DAGS_FOLDER=/home/ubuntu/airflow/dags
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
-export AWS_REGION=eu-west-1
 
 # Start the Airflow webserver and scheduler as background processes
 nohup airflow webserver --port 8080 &

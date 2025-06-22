@@ -1,7 +1,7 @@
 resource "aws_instance" "grafana" {
-  ami           = "ami-0bbd3f89449af0b30" # Ubuntu 20.04 in us-east-1
-  instance_type = "t4g.nano"              # Free tier eligible
-  key_name      = "manual"                # Replace with your key pair name
+  ami           = "ami-0bbd3f89449af0b30"
+  instance_type = "t4g.nano"
+  key_name      = "manual"
 
   user_data = <<-EOF
               #!/bin/bash
@@ -16,9 +16,9 @@ resource "aws_instance" "grafana" {
               [smtp]
               enabled = true
               host = smtp.gmail.com:587
-              user = iss.anomaly.detector@gmail.com
-              password = "${var.gmail_app_password}"
-              from_address = iss.anomaly.detector@gmail.com
+              user = "${var.notification_sender_email}"
+              password = "${var.notification_sender_app_password}"
+              from_address = "${var.notification_sender_email}"
               from_name = ISS Anomaly Detector
               skip_verify = false
               EOT

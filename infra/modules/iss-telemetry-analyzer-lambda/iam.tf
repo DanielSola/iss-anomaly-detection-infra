@@ -26,13 +26,13 @@ resource "aws_iam_policy_attachment" "lambda_basic_execution" {
 resource "aws_iam_policy" "lambda_kinesis_policy" {
   name        = "LambdaKinesisReadPolicy"
   description = "Allows Lambda to read from Kinesis Stream"
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "kinesis:GetRecords",
           "kinesis:GetShardIterator",
           "kinesis:DescribeStream",
@@ -57,8 +57,8 @@ resource "aws_iam_policy" "anomaly_scores_dynamodb_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:Scan",
@@ -83,11 +83,11 @@ resource "aws_iam_policy" "sagemaker_invoke_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "sagemaker:InvokeEndpoint",
         ]
-        Resource = "arn:aws:sagemaker:eu-west-1:${var.aws_account_id}:endpoint/rcf-anomaly-predictor-endpoint"
+        Resource = "arn:aws:sagemaker:${var.aws_region}:${var.aws_account_id}:endpoint/rcf-anomaly-predictor-endpoint"
       }
     ]
   })
@@ -107,8 +107,8 @@ resource "aws_iam_policy" "s3_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "s3:GetObject",
         ]
         Resource = "arn:aws:s3:::${var.s3_bucket_name}/models/scaler_params.json"

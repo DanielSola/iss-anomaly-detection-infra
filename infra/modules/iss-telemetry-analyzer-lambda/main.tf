@@ -31,13 +31,12 @@ resource "aws_lambda_function" "iss_telemetry_analyzer" {
   handler       = "bootstrap"
   runtime       = "provided.al2023"
   role          = aws_iam_role.lambda_role.arn
-  # source_code_hash = aws_s3_object.lambda_package.etag
   timeout     = var.timeout
   memory_size = var.memory_size
   depends_on  = [aws_s3_object.lambda_package]
   environment {
     variables = {
-      SAGEMAKER_ENDPOINT_NAME = "rcf-anomaly-predictor-endpoint"
+      SAGEMAKER_ENDPOINT_NAME = var.sagemaker_endpoint_name
       S3_BUCKET_NAME = var.s3_bucket_name
     }
   }

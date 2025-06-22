@@ -13,23 +13,18 @@ terraform {
       version = "3.0.0"
     }
   }
-  backend "s3" {
-    bucket         = "real-time-anomaly-detection-iss-terraform-state"
-    key            = "terraform/state.tfstate"
-    region         = "eu-west-1"
-    encrypt        = true
-    dynamodb_table = "terraform-lock"
-  }
+  backend "s3" {}
 }
 
 provider "aws" {
-  region = "eu-west-1" # Change to your preferred AWS region
+  region = var.aws_region # Change to your preferred AWS region
 }
 
 module "kinesis" {
   source         = "./modules/kinesis"
   stream_name    = "iss-data-stream"
   aws_account_id = var.aws_account_id
+  aws_region     = var.aws_region
 }
 
 module "iss_data_fetcher" {
@@ -41,7 +36,7 @@ module "iss_data_fetcher" {
 }
 
 module "data_bucket" {
-  source = "./modules/data-bucket"
+  source         = "./modules/data-bucket"
   s3_bucket_name = local.s3_bucket_name
 }
 
@@ -52,6 +47,7 @@ module "firehose" {
   destination_bucket_name   = module.data_bucket.name
   destination_bucket_arn    = module.data_bucket.arn
   aws_account_id            = var.aws_account_id
+  aws_region                = var.aws_region
 }
 
 module "airflow" {
@@ -61,29 +57,35 @@ module "airflow" {
   airflow_user_password = var.airflow_user_password
   airflow_user_name     = var.airflow_user_name
   aws_account_id        = var.aws_account_id
-  s3_bucket_name = local.s3_bucket_name
+  s3_bucket_name        = local.s3_bucket_name
+  aws_region            = var.aws_region
 }
 
 module "grafana" {
-  source                 = "./modules/grafana"
-  grafana_admin_password = var.grafana_admin_password
-  gmail_app_password     = var.gmail_app_password
-  aws_account_id         = var.aws_account_id
+  source                           = "./modules/grafana"
+  grafana_admin_password           = var.grafana_admin_password
+  notification_sender_app_password = var.notification_sender_app_password
+  aws_account_id                   = var.aws_account_id
+  aws_region                       = var.aws_region
+  notification_sender_email        = var.notification_sender_email
+  notification_receiver_email      = var.notification_receiver_email
 }
 
 module "iss_telemetry_analyzer_lambda" {
-  source = "./modules/iss-telemetry-analyzer-lambda"
-
-  region         = "eu-west-1"
-  github_owner   = "DanielSola"
-  timeout        = 300
-  memory_size    = 128
-  kinesis_arn    = module.kinesis.stream_arn
-  aws_account_id = var.aws_account_id
-  s3_bucket_name = local.s3_bucket_name
+  source                  = "./modules/iss-telemetry-analyzer-lambda"
+  region                  = var.aws_region
+  github_owner            = "DanielSola"
+  timeout                 = 300
+  memory_size             = 128
+  kinesis_arn             = module.kinesis.stream_arn
+  aws_account_id          = var.aws_account_id
+  s3_bucket_name          = local.s3_bucket_name
+  aws_region              = var.aws_region
+  sagemaker_endpoint_name = local.sagemaker_endpoint_name
 }
 
 module "sagemaker" {
   source                  = "./modules/sagemaker"
-  sagemaker_endpoint_name = "rcf-anomaly-predictor-endpoint"
+  sagemaker_endpoint_name = local.sagemaker_endpoint_name
+  aws_region              = var.aws_region
 }
