@@ -17,10 +17,12 @@ default_args = {
 }
 
 # AWS & SageMaker Configuration
-SAGEMAKER_ROLE_ARN = "arn:aws:iam::730335312484:role/service-role/AmazonSageMaker-ExecutionRole-20250317T121373"
+AWS_ACCOUNT_ID = os.environ.get('AWS_ACCOUNT_ID')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+SAGEMAKER_ROLE_ARN = f"arn:aws:iam::{AWS_ACCOUNT_ID}:role/service-role/AmazonSageMaker-ExecutionRole-20250317T121373"
 TRAINING_IMAGE_URI = "438346466558.dkr.ecr.eu-west-1.amazonaws.com/randomcutforest:1"
-S3_TRAINING_DATA = "s3://iss-historical-data/data/loop_A_flowrate.csv"
-S3_OUTPUT_PATH = "s3://iss-historical-data/data/"
+S3_TRAINING_DATA = f"s3://{S3_BUCKET_NAME}/data/loop_A_flowrate.csv"
+S3_OUTPUT_PATH = "s3://{S3_BUCKET_NAME}/data/"
 ENDPOINT_NAME = "rcf-anomaly-predictor-endpoint"
 
 # Set region
@@ -96,7 +98,7 @@ def get_model_config(**context):
         "ModelName": model_name,
         "PrimaryContainer": {
             "Image": TRAINING_IMAGE_URI,
-            "ModelDataUrl": f"s3://iss-historical-data/data/{job_name}/output/model.tar.gz",
+            "ModelDataUrl": f"s3://{S3_BUCKET_NAME}/data/{job_name}/output/model.tar.gz",
         },
         "ExecutionRoleArn": SAGEMAKER_ROLE_ARN,
     }
@@ -157,7 +159,7 @@ with DAG(
     description="Run a SageMaker training job with dynamically generated job names",
     catchup=False,
     render_template_as_native_obj=True,
-    schedule_interval=timedelta(minutes=10),
+    schedule_interval=timedelta(minutes=60),
     is_paused_upon_creation=False
 ) as dag:
     
@@ -195,7 +197,7 @@ with DAG(
 
     wait_for_model = S3KeySensor(
         task_id="wait_for_model",
-        bucket_name="iss-historical-data",
+        bucket_name=S3_BUCKET_NAME,
         bucket_key="{{ task_instance.xcom_pull(task_ids='generate_model_key', key='return_value') }}",
         aws_conn_id="aws_default",
         poke_interval=15,

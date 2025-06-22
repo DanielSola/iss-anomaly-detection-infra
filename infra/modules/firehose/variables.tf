@@ -17,3 +17,8 @@ variable "input_kinesis_stream_name" {
   description = "ARN of the input kinesis stream"
   type        = string
 }
+
+variable "aws_account_id" {
+  description = "AWS Account ID"
+  type        = string
+}

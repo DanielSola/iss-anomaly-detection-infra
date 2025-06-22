@@ -1,8 +1,3 @@
-provider "grafana" {
-  url  = "http://${aws_instance.grafana.public_dns}:3000"
-  auth = "admin:admin" # Replace with secure credentials (e.g., API key) after initial setup
-}
-
 resource "null_resource" "check_grafana" {
   provisioner "local-exec" {
     command = <<EOT
@@ -22,6 +17,7 @@ resource "grafana_data_source" "cloudwatch" {
   type = "cloudwatch" # Use 'cloudwatch' for the CloudWatch data source
   name = "CloudWatch"
   uid  = "eej9qve99wbnkd"
+  provider = grafana.grafana_provider
 
   json_data_encoded = jsonencode({
     authType      = "grafana-role" # Use IAM role attached to the EC2 instance

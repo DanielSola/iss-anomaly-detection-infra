@@ -4,9 +4,13 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.5"
+    }
     grafana = {
-      source  = "grafana/grafana"
-      version = ">= 2.0" # Use the latest stable version
+      source  = "registry.terraform.io/grafana/grafana"
+      version = "3.0.0"
     }
   }
   backend "s3" {
@@ -14,7 +18,7 @@ terraform {
     key            = "terraform/state.tfstate"
     region         = "eu-west-1"
     encrypt        = true
-    dynamodb_table = "terraform-lock" # Reference the table you just created
+    dynamodb_table = "terraform-lock"
   }
 }
 
@@ -23,12 +27,13 @@ provider "aws" {
 }
 
 module "kinesis" {
-  source      = "./modules/kinesis"
-  stream_name = "iss-data-stream"
+  source         = "./modules/kinesis"
+  stream_name    = "iss-data-stream"
+  aws_account_id = var.aws_account_id
 }
 
-module "ec2_instance" {
-  source               = "./modules/ec2-instance"
+module "iss_data_fetcher" {
+  source               = "./modules/iss-data-fetcher"
   ami                  = "ami-0fc389ea796968582"
   instance_type        = "t4g.nano"
   key_name             = "manual"
@@ -37,6 +42,7 @@ module "ec2_instance" {
 
 module "data_bucket" {
   source = "./modules/data-bucket"
+  s3_bucket_name = local.s3_bucket_name
 }
 
 module "firehose" {
@@ -45,27 +51,36 @@ module "firehose" {
   input_kinesis_stream_name = module.kinesis.stream_name
   destination_bucket_name   = module.data_bucket.name
   destination_bucket_arn    = module.data_bucket.arn
+  aws_account_id            = var.aws_account_id
 }
 
 module "airflow" {
-  source        = "./modules/airflow"
-  ami           = "ami-0bbd3f89449af0b30"
-  instance_type = "t4g.small"
+  source                = "./modules/airflow"
+  ami                   = "ami-0bbd3f89449af0b30"
+  instance_type         = "t4g.small"
+  airflow_user_password = var.airflow_user_password
+  airflow_user_name     = var.airflow_user_name
+  aws_account_id        = var.aws_account_id
+  s3_bucket_name = local.s3_bucket_name
 }
 
 module "grafana" {
-  source = "./modules/grafana"
+  source                 = "./modules/grafana"
+  grafana_admin_password = var.grafana_admin_password
+  gmail_app_password     = var.gmail_app_password
+  aws_account_id         = var.aws_account_id
 }
 
 module "iss_telemetry_analyzer_lambda" {
   source = "./modules/iss-telemetry-analyzer-lambda"
 
-  region       = "eu-west-1"
-  github_owner = "DanielSola"
-  #release_tag   = "latest"
-  timeout     = 300
-  memory_size = 128
-  kinesis_arn = module.kinesis.stream_arn
+  region         = "eu-west-1"
+  github_owner   = "DanielSola"
+  timeout        = 300
+  memory_size    = 128
+  kinesis_arn    = module.kinesis.stream_arn
+  aws_account_id = var.aws_account_id
+  s3_bucket_name = local.s3_bucket_name
 }
 
 module "sagemaker" {

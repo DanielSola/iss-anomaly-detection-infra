@@ -11,6 +11,17 @@ resource "aws_instance" "grafana" {
               echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
               sudo apt-get update
               sudo apt-get install -y grafana
+              # Inject SMTP config
+              sudo tee -a /etc/grafana/grafana.ini > /dev/null << EOT
+              [smtp]
+              enabled = true
+              host = smtp.gmail.com:587
+              user = iss.anomaly.detector@gmail.com
+              password = "${var.gmail_app_password}"
+              from_address = iss.anomaly.detector@gmail.com
+              from_name = ISS Anomaly Detector
+              skip_verify = false
+              EOT
               sudo systemctl start grafana-server
               sudo systemctl enable grafana-server
             EOF

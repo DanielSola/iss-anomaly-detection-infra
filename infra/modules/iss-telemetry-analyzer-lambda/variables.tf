@@ -25,3 +25,13 @@ variable "kinesis_arn" {
   description = "ARN of the Kinesis stream"
   type        = string
 }
+
+variable "aws_account_id" {
+  description = "AWS account ID"
+  type        = string
+}
+
+variable "s3_bucket_name" {
+  description = "Name of the S3 bucket"
+  type        = string
+}

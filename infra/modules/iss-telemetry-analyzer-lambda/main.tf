@@ -1,6 +1,3 @@
-
-
-# Local build of Lambda binary and zip
 # Local build of Lambda binary and zip
 resource "null_resource" "build_lambda" {
   provisioner "local-exec" {
@@ -41,6 +38,7 @@ resource "aws_lambda_function" "iss_telemetry_analyzer" {
   environment {
     variables = {
       SAGEMAKER_ENDPOINT_NAME = "rcf-anomaly-predictor-endpoint"
+      S3_BUCKET_NAME = var.s3_bucket_name
     }
   }
 }

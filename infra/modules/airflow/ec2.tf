@@ -28,18 +28,23 @@ source airflow-venv/bin/activate
 pip install --no-cache-dir "apache-airflow==2.10.5" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.8.txt"
 pip install --no-cache-dir apache-airflow-providers-amazon
 pip install --no-cache-dir pandas
+pip install --no-cache-dir scikit-learn
+
+# Set AWS account ID environment variable
+export AWS_ACCOUNT_ID=${var.aws_account_id}
+export S3_BUCKEt_NAME=${var.s3_bucket_name}
 
 # Initialize the Airflow database
 airflow db init
 
 # Create an admin user for Airflow
 airflow users create \
-    --username admin \
-    --password admin21 \
-    --firstname FirstName \
-    --lastname LastName \
-    --email user@example.com \
-    --role Admin
+  --username ${var.airflow_user_name} \
+  --password ${var.airflow_user_password} \
+  --firstname FirstName \
+  --lastname LastName \
+  --email user@example.com \
+  --role Admin
 
 # Instal AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"

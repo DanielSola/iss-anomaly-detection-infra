@@ -87,7 +87,7 @@ resource "aws_iam_policy" "sagemaker_invoke_policy" {
         Action   = [
           "sagemaker:InvokeEndpoint",
         ]
-        Resource = "arn:aws:sagemaker:eu-west-1:730335312484:endpoint/rcf-anomaly-predictor-endpoint"
+        Resource = "arn:aws:sagemaker:eu-west-1:${var.aws_account_id}:endpoint/rcf-anomaly-predictor-endpoint"
       }
     ]
   })
@@ -96,4 +96,28 @@ resource "aws_iam_policy" "sagemaker_invoke_policy" {
 resource "aws_iam_role_policy_attachment" "sagemaker_policy_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.sagemaker_invoke_policy.arn
+}
+
+# Access S3
+resource "aws_iam_policy" "s3_policy" {
+  name        = "GetScalerParamsPolicy"
+  description = "Policy to allow Lambda to read scaler params from S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "s3:GetObject",
+        ]
+        Resource = "arn:aws:s3:::${var.s3_bucket_name}/models/scaler_params.json"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.s3_policy.arn
 }

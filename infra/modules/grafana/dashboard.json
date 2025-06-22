@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 2,
   "links": [],
   "liveNow": true,
   "panels": [
@@ -218,7 +218,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "dimensions": {},
@@ -364,62 +364,60 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "CloudWatchLogsResponse CloudWatchLogsResponse"
+              "options": "lower_anomaly_score_deviation_limit_avg"
             },
             "properties": [
               {
-                "id": "custom.fillBelowTo",
-                "value": "Lower Band"
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "upper_anomaly_score_deviation_limit_avg"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
               },
               {
-                "id": "custom.fillOpacity",
-                "value": 15
+                "id": "custom.fillBelowTo",
+                "value": "anomaly_score_avg"
               },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "anomaly_score_avg"
+            },
+            "properties": [
               {
                 "id": "custom.lineWidth",
                 "value": 2
               },
               {
-                "id": "displayName",
-                "value": "Anomaly Score"
-              },
-              {
-                "id": "custom.insertNulls",
-                "value": 60000
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Upper Band"
-            },
-            "properties": [
-              {
                 "id": "custom.fillBelowTo",
-                "value": "CloudWatchLogsResponse"
+                "value": "lower_anomaly_score_deviation_limit_avg"
               },
               {
                 "id": "color",
                 "value": {
-                  "mode": "thresholds",
-                  "seriesBy": "last"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 15
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 0
-              },
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": true,
-                  "tooltip": false,
-                  "viz": false
+                  "fixedColor": "green",
+                  "mode": "fixed"
                 }
               }
             ]
@@ -427,20 +425,12 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "Lower Band"
+              "options": "lower_anomaly_score_deviation_limit_avg"
             },
             "properties": [
               {
                 "id": "custom.lineWidth",
                 "value": 0
-              },
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": true,
-                  "tooltip": false,
-                  "viz": false
-                }
               }
             ]
           }
@@ -448,22 +438,17 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 7,
+        "w": 14,
         "x": 8,
         "y": 0
       },
       "id": 11,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "stdDev",
-            "min",
-            "max"
-          ],
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -471,7 +456,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -479,7 +464,73 @@
             "uid": "eej9qve99wbnkd"
           },
           "dimensions": {},
-          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| stats avg(anomaly_score) as anomaly_score_avg by bin(3m) , @timestamp\n| display anomaly_score_avg as anomaly_score, @timestamp\n",
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| stats avg(lower_anomaly_score_deviation_limit) as lower_anomaly_score_deviation_limit_avg by bin(15s)",
+          "hide": false,
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "AWS/Lambda",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "lower_band",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": [
+            "bin(15s)"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "eej9qve99wbnkd"
+          },
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| stats avg(upper_anomaly_score_deviation_limit) as upper_anomaly_score_deviation_limit_avg by bin(15s)",
+          "hide": false,
+          "id": "",
+          "label": "",
+          "logGroups": [
+            {
+              "accountId": "730335312484",
+              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
+              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
+            }
+          ],
+          "matchExact": true,
+          "metricEditorMode": 0,
+          "metricName": "",
+          "metricQueryType": 0,
+          "namespace": "AWS/Lambda",
+          "period": "",
+          "queryLanguage": "CWLI",
+          "queryMode": "Logs",
+          "refId": "upper_band",
+          "region": "default",
+          "sqlExpression": "",
+          "statistic": "Average",
+          "statsGroups": [
+            "bin(15s)"
+          ]
+        },
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "eej9qve99wbnkd"
+          },
+          "dimensions": {},
+          "expression": "fields @timestamp\n| filter log_type = 'telemetry_data'\n| stats avg(anomaly_score) as anomaly_score_avg by bin(15s)",
           "hide": false,
           "id": "",
           "label": "",
@@ -499,97 +550,12 @@
           "queryLanguage": "CWLI",
           "queryMode": "Logs",
           "refId": "anomaly_score",
-          "region": "eu-west-1",
-          "sqlExpression": "",
-          "statistic": "Average",
-          "statsGroups": [
-            "bin(3m)",
-            "@timestamp"
-          ]
-        },
-        {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "eej9qve99wbnkd"
-          },
-          "dimensions": {},
-          "expression": "fields @timestamp\n| sort @timestamp desc\n| filter log_type = 'telemetry_data'\n| display moving_avg_std, @timestamp ",
-          "hide": true,
-          "id": "",
-          "label": "",
-          "logGroups": [
-            {
-              "accountId": "730335312484",
-              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
-              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
-            }
-          ],
-          "matchExact": true,
-          "metricEditorMode": 0,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "AWS/Lambda",
-          "period": "",
-          "queryLanguage": "CWLI",
-          "queryMode": "Logs",
-          "refId": "std",
           "region": "default",
           "sqlExpression": "",
           "statistic": "Average",
-          "statsGroups": []
-        },
-        {
-          "datasource": {
-            "type": "cloudwatch",
-            "uid": "eej9qve99wbnkd"
-          },
-          "dimensions": {},
-          "expression": "fields @timestamp\n| sort @timestamp desc\n| filter log_type = 'telemetry_data'\n| display moving_avg_score, @timestamp ",
-          "hide": false,
-          "id": "",
-          "label": "",
-          "logGroups": [
-            {
-              "accountId": "730335312484",
-              "arn": "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/lambda/iss-telemetry-analyzer-lambda:*",
-              "name": "/aws/lambda/iss-telemetry-analyzer-lambda"
-            }
-          ],
-          "matchExact": true,
-          "metricEditorMode": 0,
-          "metricName": "",
-          "metricQueryType": 0,
-          "namespace": "AWS/Lambda",
-          "period": "",
-          "queryLanguage": "CWLI",
-          "queryMode": "Logs",
-          "refId": "avg",
-          "region": "eu-west-1",
-          "sqlExpression": "",
-          "statistic": "Average",
-          "statsGroups": []
-        },
-        {
-          "datasource": {
-            "name": "Expression",
-            "type": "__expr__",
-            "uid": "__expr__"
-          },
-          "expression": "$avg + 3*$std",
-          "hide": false,
-          "refId": "Upper Band",
-          "type": "math"
-        },
-        {
-          "datasource": {
-            "name": "Expression",
-            "type": "__expr__",
-            "uid": "__expr__"
-          },
-          "expression": "$avg - 3*$std",
-          "hide": false,
-          "refId": "Lower Band",
-          "type": "math"
+          "statsGroups": [
+            "bin(15s)"
+          ]
         }
       ],
       "title": "System Anomaly Score",
@@ -716,7 +682,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -809,7 +775,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": null,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -876,7 +842,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "dimensions": {},
@@ -1037,7 +1003,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -1193,7 +1159,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "dimensions": {},
@@ -1348,7 +1314,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "datasource": {
@@ -1502,7 +1468,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "11.6.0",
+      "pluginVersion": "12.0.1",
       "targets": [
         {
           "dimensions": {},
@@ -1542,36 +1508,15 @@
   "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "current": {
-          "text": "",
-          "value": ""
-        },
-        "definition": "",
-        "description": "MovingAverageScore",
-        "label": "MovingAverageScore",
-        "name": "MovingAverageScore",
-        "options": [],
-        "query": {
-          "logGroupPrefix": "iss-telemetry-analyzer-lambda",
-          "queryType": "logGroups",
-          "refId": "CloudWatchVariableQueryEditor-VariableQuery",
-          "region": "eu-west-1"
-        },
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "2025-04-21T11:37:20.596Z",
-    "to": "2025-04-21T11:57:45.414Z"
+    "from": "now-30m",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Telemetry",
   "uid": "bej9xgs4zjapsc",
-  "version": 2
+  "version": 4
 }

@@ -33,7 +33,8 @@ resource "aws_iam_policy" "grafana_cloudwatch_policy" {
           "logs:FilterLogEvents",
           "logs:StartQuery",  # Added this action to allow Grafana to start queries
           "logs:StopQuery",   # Added this action to allow Grafana to stop queries
-          "logs:GetQueryResults"  # Added this to allow Grafana to fetch query results
+          "logs:GetQueryResults",  # Added this to allow Grafana to fetch query results
+          "logs:GetLogGroupFields"
         ]
         Resource = "*"
       },

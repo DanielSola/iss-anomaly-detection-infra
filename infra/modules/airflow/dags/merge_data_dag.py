@@ -7,10 +7,12 @@ import csv
 import pandas as pd
 import pytz
 from tabulate import tabulate
+from sklearn.preprocessing import RobustScaler
+import os
 
 # Define S3 client
 s3 = boto3.client("s3")
-BUCKET_NAME = "iss-historical-data"
+BUCKET_NAME = os.environ.get("S3_BUCKET_DATA")
 CSV_FILENAME = "loop_A_flowrate.csv"
 S3_CSV_PATH = "data/loop_A_flowrate.csv"
 
@@ -31,7 +33,12 @@ def get_data():
     if "Contents" not in response:
         return []
     
-    files = [obj for obj in response["Contents"] if obj["LastModified"] >= yesterday and obj["Key"].endswith("json")]
+    files = [
+        obj for obj in response["Contents"]
+        if obj["LastModified"] >= yesterday
+        and obj["Key"].endswith("json")
+        and obj["Key"] != "scaler_params.json"
+    ]
     all_data = []
     
     for obj in files:
@@ -78,21 +85,34 @@ def process_data():
     df_resampled['Press_Change_Rate'] = df_resampled['PRESSURE'].diff() / df_resampled['Time_Diff']
     df_resampled['Temp_Change_Rate'] = df_resampled['TEMPERATURE'].diff() / df_resampled['Time_Diff']
     df_resampled.fillna({'Flow_Change_Rate': 0, 'Press_Change_Rate': 0, 'Temp_Change_Rate': 0}, inplace=True)
-    
-    # Calculate time since last update using raw data
-    last_updates = df.groupby('name')['timestamp'].last().to_dict()
-        
+            
     # Finalize DataFrame
     df_final = df_resampled.drop(columns=['Time_Diff'])
     df_final = df_final.dropna(subset=['FLOWRATE', 'PRESSURE', 'TEMPERATURE'], how='all')  # Drop rows where all sensors are NaN
     df_final = df_final.drop(columns=['timestamp'], errors='ignore')
 
+    # Apply RobustScaler
+    scaler = RobustScaler()
+    df_scaled = scaler.fit_transform(df_final)
+    df_scaled = pd.DataFrame(df_scaled, columns=df_final.columns)
+
+    # Save scaler parameters as JSON
+    scaler_params = {
+        "center": scaler.center_.tolist(),  # Median
+        "scale": scaler.scale_.tolist()    # IQR-based scale
+    }
+
+    with open("/tmp/scaler_params.json", "w") as f:
+        json.dump(scaler_params, f)
+
+    s3.upload_file("/tmp/scaler_params.json", BUCKET_NAME, "models/scaler_params.json")
+
     # Save to CSV
-    df_final.to_csv(CSV_FILENAME, index=False, header=False)
+    df_scaled.to_csv(CSV_FILENAME, index=False, header=False)
     
     # Log the final DataFrame
-    print('FINAL COLUMNS', df_final.columns)
-    print(tabulate(df_final.head(1000), headers='keys', tablefmt='psql'))
+    print('FINAL COLUMNS', df_scaled.columns)
+    print(tabulate(df_scaled.head(1000), headers='keys', tablefmt='psql'))
 
 
 def upload_to_s3():

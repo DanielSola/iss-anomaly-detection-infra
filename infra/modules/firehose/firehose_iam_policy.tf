@@ -15,7 +15,7 @@ resource "aws_iam_role_policy" "firehose_policy" {
           "kinesis:ListTagsForStream",
           "kinesis:GetRecords"
         ]
-        Resource = "arn:aws:kinesis:eu-west-1:730335312484:stream/iss-data-stream"
+        Resource = "arn:aws:kinesis:eu-west-1:${var.aws_account_id}:stream/iss-data-stream"
       },
       {
         Effect = "Allow"

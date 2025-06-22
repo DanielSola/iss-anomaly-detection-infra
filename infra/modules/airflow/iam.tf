@@ -19,7 +19,7 @@ resource "aws_iam_role" "airflow_role" {
 resource "aws_iam_policy" "airflow_s3_policy" {
   name        = "airflow-s3-policy"
   description = "Allows Airflow to access S3 bucket"
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -33,8 +33,8 @@ resource "aws_iam_policy" "airflow_s3_policy" {
         Resource = [
           "arn:aws:s3:::airflow-iss-anomaly-detector",
           "arn:aws:s3:::airflow-iss-anomaly-detector/*",
-          "arn:aws:s3:::iss-historical-data",
-          "arn:aws:s3:::iss-historical-data/*"
+          "arn:aws:s3:::${var.s3_bucket_name}",
+          "arn:aws:s3:::${var.s3_bucket_name}/*"
         ]
       }
     ]
@@ -45,7 +45,7 @@ resource "aws_iam_policy" "airflow_s3_policy" {
 resource "aws_iam_policy" "airflow_sagemaker_policy" {
   name        = "airflow-sagemaker-policy"
   description = "Allows Airflow to manage SageMaker training jobs and access logs"
-  
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -67,9 +67,9 @@ resource "aws_iam_policy" "airflow_sagemaker_policy" {
         Resource = "*"
       },
       {
-        Effect = "Allow"
-        Action = "iam:PassRole"
-        Resource = "arn:aws:iam::730335312484:role/service-role/AmazonSageMaker-ExecutionRole-20250317T121373"
+        Effect   = "Allow"
+        Action   = "iam:PassRole"
+        Resource = "arn:aws:iam::${var.aws_account_id}:role/service-role/AmazonSageMaker-ExecutionRole-20250317T121373"
       },
       {
         Effect = "Allow"
@@ -77,7 +77,7 @@ resource "aws_iam_policy" "airflow_sagemaker_policy" {
           "logs:DescribeLogStreams",
           "logs:GetLogEvents"
         ]
-        Resource = "arn:aws:logs:eu-west-1:730335312484:log-group:/aws/sagemaker/TrainingJobs:*"
+        Resource = "arn:aws:logs:eu-west-1:${var.aws_account_id}:log-group:/aws/sagemaker/TrainingJobs:*"
       }
     ]
   })
